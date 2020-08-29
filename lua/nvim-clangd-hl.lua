@@ -49,10 +49,6 @@ local token_kind_to_highlight_group = {
 
 function M.get_highlight_callback(bufnr)
     return function(_, _, result, _)
-        local win = vim.api.nvim_get_current_win()
-        local column = vim.api.nvim_win_get_cursor(win)[1]
-        local column_count = vim.api.nvim_win_get_height(win)
-
         local line = 0
         local start = 0
         local data = result["data"]
@@ -72,16 +68,14 @@ function M.get_highlight_callback(bufnr)
                 start = delta_start
             end
 
-            if line > (column - column_count) and line < (column + column_count) then
-                vim.api.nvim_buf_add_highlight(
-                    bufnr,
-                    -1,
-                    token_kind_to_highlight_group[token_kind],
-                    line,
-                    start,
-                    start + length
-                )
-            end
+            vim.api.nvim_buf_add_highlight(
+                bufnr,
+                -1,
+                token_kind_to_highlight_group[token_kind],
+                line,
+                start,
+                start + length
+            )
 
             i = i + 5
         end
