@@ -47,8 +47,11 @@ local token_kind_to_highlight_group = {
     ["InactiveCod"] = "Normal",
 }
 
+M.hl_namespace = vim.api.nvim_create_namespace('nvim-clangd-hl-ns')
+
 function M.get_highlight_callback(bufnr)
     return function(_, _, result, _)
+		print(vim.api.nvim_get_current_buf())
         local line = 0
         local start = 0
         local data = result["data"]
@@ -68,9 +71,15 @@ function M.get_highlight_callback(bufnr)
                 start = delta_start
             end
 
+			vim.api.nvim_buf_clear_namespace(
+				bufnr,
+				M.hl_namespace,
+				0,
+				-1
+			)
             vim.api.nvim_buf_add_highlight(
                 bufnr,
-                -1,
+                M.hl_namespace,
                 token_kind_to_highlight_group[token_kind],
                 line,
                 start,
