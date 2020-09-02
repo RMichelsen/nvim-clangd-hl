@@ -31,8 +31,8 @@ local token_kind_to_highlight_group = {
     ["Function"] = "Function",
     ["Method"] = "Function",
     ["StaticMethod"] = "Function",
-    ["Field"] = "Identifier",
-    ["StaticField"] = "Identifier",
+    ["Field"] = "Normal",
+    ["StaticField"] = "Normal",
     ["Class"] = "Structure",
     ["Enum"] = "Structure",
     ["EnumConstant"] = "Constant",
@@ -40,7 +40,7 @@ local token_kind_to_highlight_group = {
     ["DependentType"] = "Type",
     ["DependentName"] = "Type",
     ["Namespace"] = "Type",
-    ["TemplateParameter"] = "Identifier",
+    ["TemplateParameter"] = "Type",
     ["Concept"] = "Type",
     ["Primitive"] = "Constant",
     ["Macro"] = "Macro",
@@ -51,6 +51,13 @@ M.hl_namespace = vim.api.nvim_create_namespace('nvim-clangd-hl-ns')
 
 function M.get_highlight_callback(bufnr)
     return function(_, _, result, _)
+        vim.api.nvim_buf_clear_namespace(
+            bufnr,
+            M.hl_namespace,
+            0,
+            -1
+        )
+
         local line = 0
         local start = 0
         local data = result["data"]
@@ -70,12 +77,6 @@ function M.get_highlight_callback(bufnr)
                 start = delta_start
             end
 
-			vim.api.nvim_buf_clear_namespace(
-				bufnr,
-				M.hl_namespace,
-				0,
-				-1
-			)
             vim.api.nvim_buf_add_highlight(
                 bufnr,
                 M.hl_namespace,
