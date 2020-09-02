@@ -51,7 +51,6 @@ M.hl_namespace = vim.api.nvim_create_namespace('nvim-clangd-hl-ns')
 
 function M.get_highlight_callback(bufnr)
     return function(_, _, result, _)
-		print(vim.api.nvim_get_current_buf())
         local line = 0
         local start = 0
         local data = result["data"]
